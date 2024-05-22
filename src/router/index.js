@@ -24,6 +24,11 @@ const router = createRouter(
                 name: "map",      
                 component: () => import("../components/MapPage.vue"),    
             }, 
+            {      
+                path: "/admin",      
+                name: "admin",      
+                component: () => import("../components/AdminPage.vue"),    
+            }, 
         ],
     }
 );

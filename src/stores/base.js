@@ -12,7 +12,7 @@ export const useBaseStore = defineStore('base',{
             this.logined = true;
             this.loginId = userId;
             this.id = id;
-            localStorage.setItem('logined', 'true')
+            localStorage.setItem('logined', 'true');
         },
         logout() {
           this.logined = false;
