@@ -38,9 +38,9 @@ const datas = []
     <button type="submit" @click="geocode()" class="btn dark:btn-primary hover:btn-primary dark:hover:btn-ghost mt-3">geocode
               </button>
 </template>
-<style scoped>
+<!-- <style scoped>
 /* setIcon 방식으로 css를 적용하려면 :deep() 을 사용해야 합니다. */
 :deep(.marker) {
     /* 원하는 style 코드를 여기에 작성합니다. */
 }
-</style>
+</style> -->
