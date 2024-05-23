@@ -3,12 +3,7 @@ from "vue-router";
 const router = createRouter(
     {  
         history: createWebHistory(""), 
-        routes: [    
-            {      
-                path: "/test",      
-                name: "test",      
-                component: () => import("../components/MainPage.vue"),    
-            },   
+        routes: [     
             {      
                 path: "/login",      
                 name: "login",      
@@ -19,16 +14,6 @@ const router = createRouter(
                 name: "signup",      
                 component: () => import("../components/SignupPage.vue"),    
             }, 
-            {      
-                path: "/map",      
-                name: "map",      
-                component: () => import("../components/MapPage.vue"),    
-            }, 
-            {      
-                path: "/map2",      
-                name: "map2",      
-                component: () => import("../components/MapPage2.vue"),    
-            },
             {      
                 path: "/",      
                 name: "map",      
