@@ -29,10 +29,10 @@
                         <!-- 후기 작성 및 보여주기 -->
                         <div class="space-y-2 mt-4">
                             <h3 class="text-xl mb-2 text-end">reviews</h3>
-                            <div v-for="(review, index) in selectedStore.reviews" :key="review.commentId" class="card bg-base-100 shadow p-2">
+                            <div v-for="(review, index) in selectedStore.reviews" :key="index" class="card bg-base-100 shadow p-2">
                                 <div class="flex justify-between items-center">
                                     <p class="text-sm"><strong>{{ review.writer }}</strong><br /> {{ review.content }}</p>
-                                    <button v-if="isReviewOwner(review.writer)" @click="deleteReview(review.commentId, index)" class="btn btn-outline btn-sm btn-error">
+                                    <button v-if="isReviewOwner(review.writer)" @click="deleteReview(review.id, index)" class="btn btn-outline btn-sm btn-error">
                                         🗑️
                                     </button>
                                 </div>
@@ -81,7 +81,7 @@ const writer = sessionStorage.getItem("loginId"); // 세션에서 작성자 이�
 
 const fetchData = async () => {
     try {
-        const response = await fetch('http://localhost:8090/store', {
+        const response = await fetch(baseStore.baseUrl + '/store', {
             method: 'get',
             credentials: 'include',
         });
@@ -101,7 +101,7 @@ const fetchData = async () => {
 
 const fetchReviews = async (storeId) => {
     try {
-        const response = await fetch(`http://localhost:8090/comment/${storeId}`, {
+        const response = await fetch(baseStore.baseUrl + `/comment/${storeId}`, {
             method: 'get',
             credentials: 'include',
         });
@@ -127,7 +127,7 @@ const addReview = async () => {
     }
     else if (newReview.value.trim()) {
         try {
-            const response = await fetch('http://localhost:8090/comment/register', {
+            const response = await fetch(baseStore.baseUrl + '/comment/register', {
                 method: 'post',
                 credentials: 'include',
                 headers: {
@@ -159,7 +159,7 @@ const addReview = async () => {
 
 const deleteReview = async (commentId, index) => {
     try {
-        const response = await fetch(`http://localhost:8090/comment/delete/${commentId}`, {
+        const response = await fetch(baseStore.baseUrl + `/comment/delete/${commentId}`, {
             method: 'delete',
             credentials: 'include',
             headers: {
