@@ -54,7 +54,7 @@
 import { useBaseStore } from '../stores/base';
 
 const baseStore = useBaseStore();
-var baseUrl = "http://localhost:8090"//baseStore.baseUrl;
+var baseUrl = baseStore.baseUrl;
 
 export default {
     name: "SignupPage",

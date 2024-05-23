@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 export const useBaseStore = defineStore('base',{
     state: () =>({
-        baseUrl: "https://yonguk.shop",
+        baseUrl: "http://localhost:8090",
         logined: false,
         loginId: null,
         id: null,

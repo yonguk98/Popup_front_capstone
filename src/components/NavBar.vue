@@ -51,8 +51,8 @@ import { RouterLink } from 'vue-router';
 import { useBaseStore } from '../stores/base';
 import { computed } from 'vue';
 
-var baseUrl = "http://localhost:8090"
-//var baseUrl = baseStore.baseUrl;
+const baseStore = useBaseStore;
+var baseUrl = baseStore.baseUrl;
 
 export default {
   name: "NavBar",

@@ -34,7 +34,7 @@ import { useBaseStore } from '../stores/base';
 import jwtDecode from 'jwt-decode';
 
 const baseStore = useBaseStore();
-var baseUrl = "http://localhost:8090"
+var baseUrl = baseStore.baseUrl;
 //var baseUrl = baseStore.baseUrl;
 
 export default {

@@ -25,6 +25,16 @@ const router = createRouter(
                 component: () => import("../components/MapPage.vue"),    
             }, 
             {      
+                path: "/map2",      
+                name: "map2",      
+                component: () => import("../components/MapPage2.vue"),    
+            },
+            {      
+                path: "/map3",      
+                name: "map",      
+                component: () => import("../components/MapPage3.vue"),    
+            },
+            {      
                 path: "/admin",      
                 name: "admin",      
                 component: () => import("../components/AdminPage.vue"),    

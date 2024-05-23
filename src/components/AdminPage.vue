@@ -20,19 +20,26 @@
     <dialog id="register_modal" class="modal" v-if="modalOpen">
         <div class="modal-box">
             <h3 class="font-bold text-lg">Article Details</h3>
-            <div>{{selectedData.content}}</div>
-            <form @submit.prevent="registerArticle">
+            <div>{{ selectedData.content }}</div>
+            <form @submit.prevent="registerArticle" method="post">
                 <div class="py-4">
                     <label for="name" class="label">이름</label>
-                    <input id="name" v-model="selectedData.name" class="input input-bordered" type="text" required>
+                    <input id="name" v-model="storeCreateData.name" class="input input-bordered" type="text" required>
                 </div>
                 <div class="py-4">
                     <label for="address" class="label">주소</label>
-                    <input id="address" v-model="selectedData.address" class="input input-bordered" type="text" required>
+                    <input id="address" v-model="storeCreateData.location" class="input input-bordered" type="text"
+                        required>
                 </div>
                 <div class="py-4">
-                    <label for="duration" class="label">기간</label>
-                    <input id="duration" v-model="selectedData.duration" class="input input-bordered" type="text" required>
+                    <label for="duration" class="label">시작일</label>
+                    <input id="duration" v-model="storeCreateData.startDate" class="input input-bordered" type="text"
+                        required>
+                </div>
+                <div class="py-4">
+                    <label for="duration" class="label">종료일</label>
+                    <input id="duration" v-model="storeCreateData.endDate" class="input input-bordered" type="text"
+                        required>
                 </div>
                 <div class="modal-action">
                     <button type="button" class="btn" @click="closeModal()">Close</button>
@@ -44,7 +51,9 @@
 </template>
 
 <script>
-const baseUrl = "http://localhost:8090";
+import { useBaseStore } from '../stores/base'
+const baseStore = useBaseStore();
+const baseUrl = baseStore.baseUrl;
 
 export default {
     data() {
@@ -52,6 +61,12 @@ export default {
             datas: { data: null },
             modalOpen: false,
             selectedData: {},
+            storeCreateData: {
+                name: null,
+                startDate: null,
+                endDate: null,
+                location: null,
+            }
         }
     },
     methods: {
@@ -80,17 +95,18 @@ export default {
             }
         },
         async registerArticle() {
-            const response = await fetch(baseUrl + "/admin/article/register", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(this.selectedData),
+            const response = await fetch(`${baseUrl}/admin/store/create`, {
+                method: 'post',
                 credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.storeCreateData),
             });
-            
+
             if (response.ok) {
                 alert('등록 성공!');
+                this.resetStoreCreateData();
                 this.closeModal();
                 this.getArticles(); // Update the table with the new data
             } else {
@@ -112,7 +128,15 @@ export default {
             }).catch(error => {
                 console.error('Error deleting article:', error);
             });
-        }
+        },
+        resetStoreCreateData() {
+            this.storeCreateData = {
+                name: null,
+                startDate: null,
+                endDate: null,
+                location: null,
+            };
+        },
     }
 }
 </script>
