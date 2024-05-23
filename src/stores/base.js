@@ -4,7 +4,7 @@ export const useBaseStore = defineStore('base', {
   state: () => ({
     isLoggedIn: false,
     isAdmin: false,
-    baseUrl: 'http://localhost:8090'
+    baseUrl: 'https://yonguk.shop'
   }),
   actions: {
     login(loginId, userId) {
