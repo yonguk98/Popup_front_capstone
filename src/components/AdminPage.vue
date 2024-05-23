@@ -111,7 +111,7 @@ export default {
         };
 
         const crawlingRequest = async () => {
-            const response = await fetch(`${baseUrl}/admin/store/crawling`, {
+            const response = await fetch(`${baseUrl}/admin/store/crawling?accountName=sungsu_bible`, {
                     method: 'GET',
                     credentials: 'include',
                     headers: {
