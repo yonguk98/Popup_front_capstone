@@ -5,8 +5,8 @@ const router = createRouter(
         history: createWebHistory(""), 
         routes: [    
             {      
-                path: "/",      
-                name: "main",      
+                path: "/test",      
+                name: "test",      
                 component: () => import("../components/MainPage.vue"),    
             },   
             {      
@@ -30,7 +30,7 @@ const router = createRouter(
                 component: () => import("../components/MapPage2.vue"),    
             },
             {      
-                path: "/map3",      
+                path: "/",      
                 name: "map",      
                 component: () => import("../components/MapPage3.vue"),    
             },

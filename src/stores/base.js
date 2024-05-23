@@ -1,27 +1,23 @@
 import { defineStore } from 'pinia';
 
-export const useBaseStore = defineStore('base',{
-    state: () =>({
-        baseUrl: "http://localhost:8090",
-        logined: false,
-        loginId: null,
-        id: null,
-    }),
-    actions:{
-        login(userId, id) {
-            this.logined = true;
-            this.loginId = userId;
-            this.id = id;
-            localStorage.setItem('logined', 'true');
-        },
-        logout() {
-          this.logined = false;
-          this.loginId = null;
-          this.id = null;
-          localStorage.setItem('logined', 'false');
-        },
+export const useBaseStore = defineStore('base', {
+  state: () => ({
+    isLoggedIn: false,
+    isAdmin: false,
+    baseUrl: 'http://localhost:8090'
+  }),
+  actions: {
+    login(loginId) {
+      this.isLoggedIn = true;
+      this.isAdmin = loginId === 'admin';
+      sessionStorage.setItem('logined', 'true');
+      sessionStorage.setItem('isAdmin', this.isAdmin);
     },
-    getters:{
-        isLoggedIn: (state) => state.logined,
+    logout() {
+      this.isLoggedIn = false;
+      this.isAdmin = false;
+      sessionStorage.setItem('logined', 'false');
+      sessionStorage.setItem('isAdmin', 'false');
     }
-})
+  }
+});

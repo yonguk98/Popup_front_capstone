@@ -15,13 +15,11 @@
               name="password" id="password" type="password" placeholder="비밀번호를 입력해주세요." v-model="loginData.password" />
           </div>
           <div class="flex flex-col m-5">
-            <button type="submit" class="btn dark:btn-primary hover:btn-primary dark:hover:btn-ghost mt-3">Sign
-              in</button>
+            <button type="submit" class="btn dark:btn-primary hover:btn-primary dark:hover:btn-ghost mt-3">Sign in</button>
           </div>
           <div class="flex flex-col m-5 items-center">
             <span class="text-center text-opacity-30"> ----- 처음 이용하시나요? ----- </span>
-            <RouterLink to="/signup" class="btn dark:btn-primary hover:btn-primary dark:hover:btn-ghost mt-3 w-6/12">Sign
-              up</RouterLink>
+            <RouterLink to="/signup" class="btn dark:btn-primary hover:btn-primary dark:hover:btn-ghost mt-3 w-6/12">Sign up</RouterLink>
           </div>
         </form>
       </div>
@@ -32,103 +30,91 @@
 <script>
 import { useBaseStore } from '../stores/base';
 import jwtDecode from 'jwt-decode';
-
-const baseStore = useBaseStore();
-var baseUrl = baseStore.baseUrl;
-//var baseUrl = baseStore.baseUrl;
+import { ref, computed, watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   name: "LoginPage",
-  data() {
-    return {
-      loginData: {
-        loginId: "",
-        password: ""
-      },
-      dataCheck: {
-        loginId: false,
-        password: false
-      },
-      userInfo: "",
-    }
-  },
-  watch: {
-    'loginData.loginId': function () {
-      this.loginIdCheck()
-    },
-    'loginData.password': function () {
-      this.passwordCheck()
-    }
-  },
-  methods: {
-    async loginRequest() {
+  setup() {
+    const baseStore = useBaseStore();
+    const router = useRouter();
+    
+    const loginData = ref({ loginId: "", password: "" });
+    const dataCheck = ref({ loginId: false, password: false });
+    const userInfo = ref("");
 
-      if (this.checkAll()) {
-        await fetch(`${baseUrl}/member/login`, {
-          method: 'post',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(this.loginData)
-        }).then(res => {
-          return res.json();
-        }).then(json => {
-          this.decodeToken(json);
-          if (json.msg) alert(json.msg);
-          if (json.statusCode == "200") {
-            this.$router.push("/")
-          }
-        }).catch(
-          () => {
-            alert("로그인이 실패하였습니다.")
-            this.$router.push("/login")
-          }
-        )
-      } else {
-        alert(this.findFalse() + " 항목을 다시 입력해주세요");
-      }
-    },
-    loginIdCheck() {
-      if (this.loginData.loginId.length > 3) {
-        this.dataCheck.loginId = true;
-      } else {
-        this.dataCheck.loginId = false;
-      }
-    },
-    passwordCheck() {
-      if (this.loginData.password.length > 3) {
-        this.dataCheck.password = true;
-      } else {
-        this.dataCheck.password = false;
-      }
-    },
-    checkAll() {
-      return Object.values(this.dataCheck).every(x => x === true);
-    },
-    findFalse() {
+    const baseUrl = computed(() => baseStore.baseUrl);
+    const logined = computed(() => baseStore.isLoggedIn);
+
+    watch(() => loginData.value.loginId, loginIdCheck);
+    watch(() => loginData.value.password, passwordCheck);
+
+    function loginIdCheck() {
+      dataCheck.value.loginId = loginData.value.loginId.length > 3;
+    }
+
+    function passwordCheck() {
+      dataCheck.value.password = loginData.value.password.length > 3;
+    }
+
+    function checkAll() {
+      return Object.values(dataCheck.value).every(x => x);
+    }
+
+    function findFalse() {
       const nameMapping = {
         loginId: ' 아이디',
         password: ' 비밀번호'
       };
-      const falseEntries = Object.entries(this.dataCheck).filter(([key, value]) => value === false);
-      const falseKeys = falseEntries.map(([key]) => nameMapping[key] || key);
-      return falseKeys;
-    },
-    decodeToken(json) {
+      return Object.entries(dataCheck.value)
+        .filter(([key, value]) => !value)
+        .map(([key]) => nameMapping[key])
+        .join(', ');
+    }
+
+    async function loginRequest() {
+      if (checkAll()) {
+        try {
+          const response = await fetch(`${baseUrl.value}/member/login`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(loginData.value)
+          });
+          const json = await response.json();
+          decodeToken(json);
+          if (json.msg) alert(json.msg);
+          if (json.statusCode == "200") {
+            router.push("/");
+          }
+        } catch (error) {
+          alert("로그인이 실패하였습니다.");
+          router.push("/login");
+        }
+      } else {
+        alert(findFalse() + " 항목을 다시 입력해주세요");
+      }
+    }
+
+    function decodeToken(json) {
       const token = json.data.accessToken;
       if (token) {
-        this.userInfo = jwtDecode(token);
-        
-        baseStore.login(this.userInfo.data.loginId, this.userInfo.data.id);
-        // baseStore.loginId = this.userInfo.data.loginId;
-        // baseStore.id = this.userInfo.data.id;
-        // baseStore.logined = true
-
+        userInfo.value = jwtDecode(token);
+        baseStore.login(userInfo.value.data.loginId);
       } else {
-        console.error('No JWT token found in cookies');
+        console.error('No JWT token found in response');
       }
-    },
+    }
+
+    return {
+      loginData,
+      dataCheck,
+      loginRequest,
+      logined,
+    };
+  },
+  created() {
+    sessionStorage.clear();
   }
 }
 </script>
