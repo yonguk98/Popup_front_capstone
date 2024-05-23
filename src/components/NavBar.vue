@@ -38,7 +38,8 @@ export default {
         },
       });
       baseStore.logout(); // 로그아웃 후 스토어 상태 업데이트
-      sessionStorage.clear(); 
+      sessionStorage.clear();
+      window.location.reload(); 
     };
 
     return {

@@ -100,7 +100,8 @@ export default {
       const token = json.data.accessToken;
       if (token) {
         userInfo.value = jwtDecode(token);
-        baseStore.login(userInfo.value.data.loginId);
+        console.log(userInfo.value.data);
+        baseStore.login(userInfo.value.data.loginId, userInfo.value.data.id);
       } else {
         console.error('No JWT token found in response');
       }

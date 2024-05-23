@@ -7,17 +7,23 @@ export const useBaseStore = defineStore('base', {
     baseUrl: 'http://localhost:8090'
   }),
   actions: {
-    login(loginId) {
+    login(loginId, userId) {
       this.isLoggedIn = true;
       this.isAdmin = loginId === 'admin';
+      sessionStorage.setItem("userId", userId);
+      sessionStorage.setItem("loginId", loginId);
       sessionStorage.setItem('logined', 'true');
       sessionStorage.setItem('isAdmin', this.isAdmin);
     },
     logout() {
       this.isLoggedIn = false;
       this.isAdmin = false;
-      sessionStorage.setItem('logined', 'false');
-      sessionStorage.setItem('isAdmin', 'false');
+      sessionStorage.clear();
+      sessionStorage.setItem('logined', false);
+
+    },
+    getIsLoggedIn(){
+        return this.isLoggedIn;
     }
   }
 });
