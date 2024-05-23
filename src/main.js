@@ -8,11 +8,12 @@ import { createNaverMap } from "vue3-naver-maps";
 
 const app = createApp(App);
 const pinia = createPinia();
+const clientId = import.meta.env.VITE_clientId;
 
 app.use(router);
 app.use(pinia);
 app.use(createNaverMap, {
-    clientId: "hucjy7m1er",
+    clientId: clientId,
     category: "ncp",
     subModules: [],
 });

@@ -1,5 +1,6 @@
 <template>
     <div>
+        <button class="btn" @click="crawlingRequest">Crawling Start</button>
         <button class="btn" @click="getArticles">Get Articles</button>
         <div class="overflow-x-auto">
             <table class="table">
@@ -109,6 +110,16 @@ export default {
             modal.value.close(); // Close the dialog
         };
 
+        const crawlingRequest = async () => {
+            const response = await fetch(`${baseUrl}/admin/store/crawling`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+        }
+
         const registerArticle = async () => {
             try {
                 const response = await fetch(`${baseUrl}/admin/store/create`, {
@@ -195,6 +206,7 @@ export default {
             closeModal,
             registerArticle,
             deleteArticle,
+            crawlingRequest,
             modal,
         };
     },
