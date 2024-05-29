@@ -2,8 +2,8 @@
     <div class="container flex h-full">
         <naver-map class="w-3/5 h-full" :map-options="mapOptions">
             <div v-for="(data, index) in datas" :key="index">
-                <naver-marker :latitude="parseFloat(data.ycoordinate)"
-                    :longitude="parseFloat(data.xcoordinate)" @click="selectStore(data)">
+                <naver-marker :latitude="parseFloat(data.ycoordinate)" :longitude="parseFloat(data.xcoordinate)"
+                    @click="selectStore(data)">
                     <div class="marker">
                         <img src="../assets/marker.png" alt="Marker">
                     </div>
@@ -29,15 +29,18 @@
                         <!-- 후기 작성 및 보여주기 -->
                         <div class="space-y-2 mt-4">
                             <h3 class="text-xl mb-2 text-end">reviews</h3>
-                            <div v-for="(review, index) in selectedStore.reviews" :key="index" class="card bg-base-100 shadow p-2">
+                            <div v-for="(review, index) in selectedStore.reviews" :key="index"
+                                class="card bg-base-100 shadow p-2">
                                 <div class="flex justify-between items-center">
                                     <p class="text-sm"><strong>{{ review.writer }}</strong><br /> {{ review.content }}</p>
-                                    <button v-if="isReviewOwner(review.writer)" @click="deleteReview(review.id, index)" class="btn btn-outline btn-sm btn-error">
+                                    <button v-if="isReviewOwner(review.writer)" @click="deleteReview(review.id, index)"
+                                        class="btn btn-outline btn-sm btn-error">
                                         🗑️
                                     </button>
                                 </div>
                             </div>
-                            <textarea v-model="newReview" class="textarea textarea-bordered w-full" placeholder="후기 작성"></textarea>
+                            <textarea v-model="newReview" class="textarea textarea-bordered w-full"
+                                placeholder="후기 작성"></textarea>
                             <button @click="addReview" class="btn btn-primary mt-2">후기 추가</button>
                         </div>
                     </div>
@@ -64,7 +67,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { NaverMap, NaverMarker } from 'vue3-naver-maps';
-import {useBaseStore} from '../stores/base';
+import { useBaseStore } from '../stores/base';
 
 const mapOptions = ref({
     latitude: 37.5445024, // 지도 중앙 위도
@@ -84,6 +87,8 @@ const fetchData = async () => {
         const response = await fetch(baseStore.baseUrl + '/store', {
             method: 'get',
             credentials: 'include',
+            headers: {
+            }
         });
         const result = await response.json();
         // Fetch 결과에서 data 배열을 추출하여 datas에 할당
@@ -104,6 +109,9 @@ const fetchReviews = async (storeId) => {
         const response = await fetch(baseStore.baseUrl + `/comment/${storeId}`, {
             method: 'get',
             credentials: 'include',
+            headers: {
+                'Authorization': 'Bearer ' + sessionStorage.getItem("accessToken"),
+            }
         });
         const result = await response.json();
         if (result.statusCode === "200") {
@@ -122,7 +130,7 @@ const selectStore = (store) => {
 };
 
 const addReview = async () => {
-    if(baseStore.getIsLoggedIn() == false){
+    if (baseStore.getIsLoggedIn() == false) {
         alert("로그인이 필요합니다.");
     }
     else if (newReview.value.trim()) {
@@ -132,6 +140,7 @@ const addReview = async () => {
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("accessToken"),
                 },
                 body: JSON.stringify({
                     memberId: parseInt(sessionStorage.getItem("userId")),
@@ -164,6 +173,7 @@ const deleteReview = async (commentId, index) => {
             credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + sessionStorage.getItem("accessToken"),
             },
         });
         const result = await response.json();

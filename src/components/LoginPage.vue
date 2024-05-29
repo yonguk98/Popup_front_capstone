@@ -97,11 +97,11 @@ export default {
     }
 
     function decodeToken(json) {
-      const token = json.data.accessToken;
-      if (token) {
-        userInfo.value = jwtDecode(token);
-        console.log(userInfo.value.data);
-        baseStore.login(userInfo.value.data.loginId, userInfo.value.data.id);
+      const accessToken = json.data.accessToken;
+      const refreshToken = json.data.refreshToken;
+      if (accessToken) {
+        userInfo.value = jwtDecode(accessToken);
+        baseStore.login(userInfo.value.data.loginId, userInfo.value.data.id, accessToken, refreshToken);
       } else {
         console.error('No JWT token found in response');
       }

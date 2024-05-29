@@ -80,6 +80,10 @@ export default {
                 const response = await fetch(`${baseUrl}/admin/article`, {
                     method: 'GET',
                     credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + sessionStorage.getItem("accessToken"),
+                    },
                 });
                 datas.value = await response.json();
             } catch (error) {
@@ -112,12 +116,13 @@ export default {
 
         const crawlingRequest = async () => {
             const response = await fetch(`${baseUrl}/admin/store/crawling?accountName=seongsu_bible`, {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + sessionStorage.getItem("accessToken"),
+                },
+            });
         }
 
         const registerArticle = async () => {
@@ -127,6 +132,7 @@ export default {
                     credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + sessionStorage.getItem("accessToken"),
                     },
                     body: JSON.stringify(storeCreateData.value),
                 });
@@ -149,6 +155,10 @@ export default {
                 const response = await fetch(`${baseUrl}/admin/article/${id}/delete`, {
                     method: 'DELETE',
                     credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + sessionStorage.getItem("accessToken"),
+                    },
                 });
                 if (response.ok) {
                     getArticles(); // Reload articles after deletion

@@ -35,6 +35,7 @@ export default {
         credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + sessionStorage.getItem("accessToken"),
         },
       });
       baseStore.logout(); // 로그아웃 후 스토어 상태 업데이트
