@@ -187,6 +187,10 @@ export default {
             if (matches) {
                 let [_, name, location, startDate, , endDate] = matches;
 
+                // location이 건물 이름인 경우 지정된 도로명 주소로 수동 변환
+
+                location = findAndStripPrefix(location);
+
                 // 종료 날짜가 없는 경우 endDate를 null로 설정
                 if (!endDate) {
                     endDate = startDate;
@@ -206,6 +210,27 @@ export default {
                 throw new Error('Input string does not match the expected format.');
             }
         }
+
+        function findAndStripPrefix(location) {
+            const strings = [
+                "스퀘어성수 서울 성동구 연무장길 81 1층, B1층",
+                "EQL 서울 성동구 연무장15길 11 EQL",
+                "성수연방 서울 성동구 성수이로14길 14 성수연방",
+                "언더스탠드애비뉴 서울 성동구 왕십리로 63 언더스탠드에비뉴",
+                "1유로프로젝트 서울 성동구 송정18길 1-1",
+                "플랜트란스 서울 성동구 광나루로9가길 15-3 1층",
+                "엠프티성수 서울 성동구 성수이로 97",
+                "테라스성수 서울 성동구 아차산로 104 3층",
+                "LCDC 서울 성동구 연무장17길 10",
+                "도어투성수 서울 성동구 연무장길 38-1 1층",
+                "LOOOP 루프 서울 성동구 연무장5길 9-13 1층"
+            ];
+            const defaultValue = location;
+            const matchingString = strings.find(str => str.startsWith(location));
+            console.log(matchingString);
+            return matchingString ? matchingString.slice(location.length) : defaultValue;
+        }
+
         return {
             datas,
             modalOpen,
